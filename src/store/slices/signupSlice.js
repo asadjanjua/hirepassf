@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  step1Data: null,      // Info from first step
-  step2Data: null,      // Info from second step before final submit
-  tempUserId: null,     // ID returned from API after step 1
-  currentStep: 1,       // Track which step the user is on
+  step1Data: null,
+  step2Data: null,
+  tempUserId: null,
+  currentStep: 1,
 };
 
 const signupSlice = createSlice({
@@ -23,14 +23,7 @@ const signupSlice = createSlice({
     setCurrentStep: (state, action) => {
       state.currentStep = action.payload;
     },
-    clearSignup: (state) => {
-      state.step1Data = null;
-      state.step2Data = null;
-      state.tempUserId = null;
-      state.currentStep = 1;
-      state.loading = false;
-      state.error = null;
-    },
+    clearSignup: () => initialState, // cleaner reset
   },
 });
 

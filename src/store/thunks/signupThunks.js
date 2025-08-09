@@ -7,12 +7,18 @@ import {
     clearSignup
 } from '../slices/signupSlice';
 import { setUser, setAuthenticated } from '../slices/authSlice';
+import { setError, clearAllErrors } from '../slices/errorSlice';
 
 // Step 1 Signup Thunk
 export const signupStep1 = createAsyncThunk(
     'signup/signupStep1',
     async (formData, { dispatch, rejectWithValue }) => {
         try {
+            // Set loading state
+            dispatch(setLoading({ field: 'step1', status: true }));
+            
+            // Clear previous errors
+            dispatch(clearAllErrors());
           
             const response = await fetch('http://localhost:5000/api/signup/step1', {
                 method: 'POST',
@@ -21,7 +27,8 @@ export const signupStep1 = createAsyncThunk(
             });
 
             if (!response.ok) {
-                throw new Error('Step 1 signup failed');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Step 1 signup failed');
             }
 
             const data = await response.json();
@@ -33,8 +40,13 @@ export const signupStep1 = createAsyncThunk(
 
             return data;
         } catch (error) {
+            // Set error in error slice
+            dispatch(setError({ field: 'signup', message: error.message }));
             return rejectWithValue(error.message);
-        } 
+        } finally {
+            // Clear loading state
+            dispatch(setLoading({ field: 'step1', status: false }));
+        }
     }
 );
 
@@ -45,6 +57,11 @@ export const signupStep2 = createAsyncThunk(
     'signup/signupStep2',
     async (formData, { dispatch, getState, rejectWithValue }) => {
         try {
+            // Set loading state
+            dispatch(setLoading({ field: 'step2', status: true }));
+            
+            // Clear previous errors
+            dispatch(clearAllErrors());
 
             const { signup } = getState();
             const payload = {
@@ -59,7 +76,8 @@ export const signupStep2 = createAsyncThunk(
             });
 
             if (!response.ok) {
-                throw new Error('Step 2 signup failed');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Step 2 signup failed');
             }
 
             const data = await response.json();
@@ -76,7 +94,12 @@ export const signupStep2 = createAsyncThunk(
 
             return data;
         } catch (error) {
+            // Set error in error slice
+            dispatch(setError({ field: 'signup', message: error.message }));
             return rejectWithValue(error.message);
+        } finally {
+            // Clear loading state
+            dispatch(setLoading({ field: 'step2', status: false }));
         }
     }
 );
