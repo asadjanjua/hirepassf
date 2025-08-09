@@ -39,7 +39,6 @@ export const loginUser = createAsyncThunk(
     
 
 // src/store/thunks/authThunks.js
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setForgotPasswordEmail } from "../slices/authSlice"; 
 
 export const forgotPasswordThunk = createAsyncThunk(
